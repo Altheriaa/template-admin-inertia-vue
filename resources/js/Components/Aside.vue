@@ -1,6 +1,6 @@
 <script setup>
 import { Link, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 
 const props = defineProps({
     show: Boolean
@@ -16,6 +16,14 @@ const isUrl = (...urls) => {
         return currentUrl === '/';
     }
     return urls.filter(url => currentUrl.startsWith(url)).length > 0;
+};
+
+const dropdowns = ref({
+    emodul: isUrl('/emodul'),
+});
+
+const toggleDropdown = (key) => {
+    dropdowns.value[key] = !dropdowns.value[key];
 };
 </script>
 
@@ -50,7 +58,7 @@ const isUrl = (...urls) => {
         </div>
 
         <!-- Navigation -->
-        <nav class="flex-1 px-3 py-4 space-y-0.5">
+        <nav class="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto custom-scrollbar">
             <Link href="/" :class="[isUrl('/') ? 'bg-white/10 text-white' : 'text-white/50 hover:text-white hover:bg-white/5', 'flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors']">
                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
@@ -58,6 +66,42 @@ const isUrl = (...urls) => {
                 </svg>
                 Dashboard
             </Link>
+
+            <!-- Dropdown Group: E-Modul -->
+            <div>
+                <button
+                    @click="toggleDropdown('emodul')"
+                    :class="[
+                        isUrl('/emodul') ? 'text-white' : 'text-white/50 hover:text-white hover:bg-white/5',
+                        'w-full flex items-center justify-between px-3 py-2.5 rounded-md text-sm font-medium transition-colors group'
+                    ]"
+                >
+                    <div class="flex items-center gap-3">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                        E-Modul
+                    </div>
+                    <svg
+                        :class="['w-3.5 h-3.5 text-white/20 group-hover:text-white/40 transition-transform duration-200', dropdowns.emodul ? 'rotate-180' : '']"
+                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                    >
+                        <path d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div v-show="dropdowns.emodul" class="mt-1 ml-4 pl-3 border-l border-white/5 space-y-0.5">
+                    <Link href="#" :class="[isUrl('/emodul/materi') ? 'text-white bg-white/5' : 'text-white/40 hover:text-white hover:bg-white/5', 'block px-3 py-2 rounded-md text-sm transition-colors']">
+                        Materi Kuliah
+                    </Link>
+                    <Link href="#" :class="[isUrl('/emodul/tugas') ? 'text-white bg-white/5' : 'text-white/40 hover:text-white hover:bg-white/5', 'block px-3 py-2 rounded-md text-sm transition-colors']">
+                        Tugas & Quiz
+                    </Link>
+                    <Link href="#" :class="[isUrl('/emodul/referensi') ? 'text-white bg-white/5' : 'text-white/40 hover:text-white hover:bg-white/5', 'block px-3 py-2 rounded-md text-sm transition-colors']">
+                        Daftar Pustaka
+                    </Link>
+                </div>
+            </div>
+
             <Link href="/order" :class="[isUrl('/order') ? 'bg-white/10 text-white' : 'text-white/50 hover:text-white hover:bg-white/5', 'flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors']">
                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
@@ -100,3 +144,19 @@ const isUrl = (...urls) => {
         </div>
     </aside>
 </template>
+
+<style scoped>
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+</style>
